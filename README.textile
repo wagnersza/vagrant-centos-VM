@@ -1,0 +1,1 @@
+h1. Howto install a VirtualBox Machine CentOS with Vagrant on Mac OSX 10.6
