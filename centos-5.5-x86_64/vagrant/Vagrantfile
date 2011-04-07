@@ -1,0 +1,17 @@
+Vagrant::Config.run do |config|
+  config.vm.box = 'Centos55-64'
+  config.vm.box_url = ''
+  config.vm.boot_mode = :gui
+
+  config.vm.define :be do |be|
+    be.vm.host_name = 'be.sandbox'
+    be.vm.network "33.33.33.33"
+
+    be.vm.provision :puppet do |puppet|
+      puppet.module_path = ['../puppet/modules','../puppet/modules']
+      puppet.manifest_file = 'site.pp'
+      puppet.options = %w[--templatedir templates]
+    end
+  end
+
+end
