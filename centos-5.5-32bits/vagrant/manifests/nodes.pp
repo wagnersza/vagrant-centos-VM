@@ -12,10 +12,12 @@ node sandbox inherits basenode {
 	}
 }
 
-# node puppetmaster inherits sandbox {
-#         
-# 		$puppetmaster_passwd = '$1$6FlrakZW$7P7npg/7rbgAt2r8hrJvC0'
-# 		$puppetmaster_local_ipbind = '33.33.33.33'
-# 		
-# 		include role_puppetmaster
-# }
+node 'be.sandbox' inherits sandbox {
+        
+		$sandbox_appuser_passwd = '$1$6FlrakZW$7P7npg/7rbgAt2r8hrJvC0'
+		$redis_sandbox_local_ipbind = '33.33.33.33'
+		$nginx_be_sandbox_local_ipbind = '33.33.33.34'
+		
+		include role_sandbox-be
+		
+}

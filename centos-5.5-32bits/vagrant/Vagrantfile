@@ -1,0 +1,28 @@
+Vagrant::Config.run do |config|
+  config.vm.box = 'Centos55-32'
+  config.vm.box_url = 'http://dl.dropbox.com/u/25630259/vagrant-centos55-32bits.box'
+  config.vm.boot_mode = :gui
+
+  config.vm.define :be do |be_sandbox|
+    be_sandbox.vm.host_name = 'be_sandbox'
+    be_sandbox.vm.network "33.33.33.33"
+
+    # be_sandbox.vm.provision :puppet do |puppet|
+    #       puppet.module_path = ['puppet/modules','puppet-master/modules']
+    #       puppet.manifest_file = 'site.pp'
+    #       puppet.options = %w[--templatedir templates]
+    #     end
+  end
+
+  # config.vm.define :db do |db_sandbox|
+  #   db_sandbox.vm.host_name = 'db_sandbox'
+  #   db_sandbox.vm.network "33.33.33.33"
+  # 
+  #   # db_sandbox.vm.provision :puppet do |puppet|
+  #   #       puppet.module_path = ['puppet/modules','puppet-master/modules']
+  #   #       puppet.manifest_file = 'site.pp'
+  #   #       puppet.options = %w[--templatedir templates]
+  #   #     end
+  # end
+
+end
