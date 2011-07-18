@@ -10,58 +10,74 @@ class puppetmaster::common {
 	$project = puppetmaster
 	$appuser = puppet
 	$appgroup = puppet
-	
-	# Create User
-	user { '$appuser': 
-		ensure	=> present,
-		uid	=> '507',
-		gid	=> '507',
-		require => Group['$appgroup'],
-	}
-
-	# Create Group
-	group { '$appgroup':
+		
+	# Repo files
+	file { 'prosvc.repo':
+		path => '/etc/yum.repos.d/prosvc.repo',
 		ensure => present,
-		gid => 507,
+		content => template("$project/prosvc.repo.erb"),
+		owner => 'root',
 	}
-	
-	# Download repo files
-	file { '/etc/yum.repos.d/prosvc.repo':
+	file { 'puppetlabs.repo':
+		path => '/etc/yum.repos.d/puppetlabs.repo',
 		ensure => present,
-		source => 'http://yum.puppetlabs.com/prosvc/prosvc.repo',
+		content => template("$project/puppetlabs.repo.erb"),
+		owner => 'root',
+	}
+	file { 'rpmforge.repo':
+		path => '/etc/yum.repos.d/rpmforge.repo',
+		ensure => present,
+		content => template("$project/rpmforge.repo.erb"),
+		owner => 'root',
+	}
+	file { 'epel.repo':
+		path => '/etc/yum.repos.d/epel.repo',
+		ensure => present,
+		content => template("$project/epel.repo.erb"),
 		owner => 'root',
 	}
 	
 	# RPMS
-	package { 'puppetlabs-repo':
-   		source => 'http://yum.puppetlabs.com/base/puppetlabs-repo-3.0-2.noarch.rpm',
-		ensure => 'present';
-	'puppet':
-		ensure => '2.6.7-0.5.noarch';
+	package {'puppet':
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '2.6.7-0.5.noarch';
+		ensure => 'latest';
 	'puppet-server':
-		ensure => '2.6.7-0.5.noarch';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '2.6.7-0.5.noarch';
+		ensure => 'latest';
 	'puppet-dashboard':
-		ensure => '1.1.0-1.noarch';
-	'rpmforge-release':
-		source => 'http://apt.sw.be/redhat/el5/en/i386/rpmforge/RPMS/rpmforge-release-0.3.6-1.el5.rf.i386.rpm',
-		ensure => 'present';
-	'epel-release':
-		source => 'http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-4.noarch.rpm',
-		ensure => 'present';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '1.1.0-1.noarch';
+		ensure => 'latest';		
 	'ruby':
-		ensure => '1.8.5-5.el5_4.8';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '1.8.5-5.el5_4.8';
+		ensure => 'latest';
 	'rubygems':
-		ensure => '1.3.1-1.el5';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '1.3.1-1.el5';
+		ensure => 'latest';
 	'rubygem-rails':
-		ensure => '2.1.1-2.el5';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '2.1.1-2.el5';
+		ensure => 'latest';
 	'rubygem-sqlite3-ruby':
-		ensure => '1.2.4-1.el5';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '1.2.4-1.el5';
+		ensure => 'latest';
 	'ruby-devel':
-		ensure => '1.8.5-5.el5_4.8';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '1.8.5-5.el5_4.8';
+		ensure => 'latest';
 	'ruby-mysql':
-		ensure => '2.7.3-1.el5';
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '2.7.3-1.el5';
+		ensure => 'latest';
 	'mysql-server':
-		ensure => '5.0.77-4.el5_6.6';			
+		require => [ File["prosvc.repo"], File["puppetlabs.repo"], File["rpmforge.repo"], File["epel.repo"] ],
+		# ensure => '5.0.77-4.el5_6.6';			
+		ensure => 'latest';
 	}
 	
 	# Start and install mysql service
@@ -71,24 +87,32 @@ class puppetmaster::common {
 	}
 	
 	# rake DB migrate
-	exec { 'db-migrate':
-		enviroment => ['RAILS_ENV=production']
-		command => 'cd /usr/share/puppet-dashboard && rake install && rake db:create && rake db:migrate'
+	exec { "db-migrate":
+			require => [ Package["mysql-server"], Package["puppet-dashboard"] ],
+			environment => ['RAILS_ENV=production'],
+			command => "sh -c 'cd /usr/share/puppet-dashboard && rake install && rake db:create && rake db:migrate'";
 	}
-	
-	# Change puppet config files
+
+	# Create report dir	
+	exec {"mkdir-reports":
+			require => [ Package["puppet-dashboard"] ],
+			command => "mkdir -p /var/lib/puppet/lib/puppet/reports/";
+	}
+		
+	#Change puppet config files
 	file { '/etc/sysconfig/puppet':
 		ensure => present,
-		content => template('$project/puppet-sysconfig.erb');
+		content => template("$project/puppet_sysconfig.erb");
 	'/etc/sysconfig/puppetmaster':
 		ensure => present,
-		content => template('$project/puppetmaster-sysconfig.erb');
+		content => template("$project/puppetmaster-sysconfig.erb");
 	'/etc/puppet/puppet.conf':
 		ensure => present,
-		content => template('$project/puppet-conf.erb');
+		content => template("$project/puppet-conf.erb");	
 	'/var/lib/puppet/lib/puppet/reports/puppet_dashboard.rb':
+		require => Exec["mkdir-reports"],
 		ensure => present,
-		content => template('$project/puppet_dashboard.rb.erb');
+		content => template("$project/puppet_dashboard.rb.erb");
 	}
 	
 }

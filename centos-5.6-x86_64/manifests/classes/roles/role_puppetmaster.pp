@@ -1,3 +1,3 @@
 class role_puppetmaster {
-	include puppetmaster::puppetmaster
+	include puppetmaster::common
 }

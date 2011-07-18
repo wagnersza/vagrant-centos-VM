@@ -1,3 +1,3 @@
 class role_puppetclient {
-	include puppetclient::puppetclient
+	include puppetclient::common
 }

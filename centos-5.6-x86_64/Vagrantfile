@@ -1,6 +1,6 @@
 Vagrant::Config.run do |config|
-  config.vm.box = 'puppetmaster'
-  config.vm.box_url = '/Users/wagnersza/Downloads/centos-56-x86_64.box'
+  config.vm.box = 'centos-64'
+  config.vm.box_url = '/Users/wagnersza/Downloads/CentOS-5.6-x86_64.box'
   config.vm.boot_mode = :gui
 
   config.vm.define :puppetmaster do |puppetmaster|
