@@ -1,8 +1,8 @@
 # Class: puppetmaster::common
 #
-# Puppet master commun class
+# Puppet master common class
 #
-# Author: Wagner Souza (wagnersza@corp.globo.com)
+# Author: Wagner Souza (wagnersza@gmail.com)
 #
 class puppetmaster::common {
 
@@ -88,7 +88,7 @@ class puppetmaster::common {
 	
 	# rake DB migrate
 	exec { "db-migrate":
-			require => [ Package["mysql-server"], Package["puppet-dashboard"] ],
+			require => [ Package["mysql-server"], Package["puppet-dashboard"], Service["mysqld"] ],
 			environment => ['RAILS_ENV=production'],
 			command => "sh -c 'cd /usr/share/puppet-dashboard && rake install && rake db:create && rake db:migrate'";
 	}
