@@ -30,3 +30,19 @@ node puppetclient inherits sandbox {
 		
 		include role_puppetclient
 }
+
+node nginx inherits sandbox {
+        
+		$nginx_passwd = '$1$6FlrakZW$7P7npg/7rbgAt2r8hrJvC0'
+		$nginx_local_ipbind = '33.33.33.35'
+		
+		include role_nginx
+}
+
+node rpmmaker inherits sandbox {
+        
+		$rpmmaker_passwd = '$1$6FlrakZW$7P7npg/7rbgAt2r8hrJvC0'
+		$rpmmaker_local_ipbind = '33.33.33.36'
+		
+		include role_rpmmaker
+}
