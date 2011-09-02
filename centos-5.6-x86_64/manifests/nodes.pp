@@ -46,3 +46,19 @@ node rpmmaker inherits sandbox {
 		
 		include role_rpmmaker
 }
+
+node controltier_server inherits sandbox {
+        
+		$controltier_server_passwd = '$1$6FlrakZW$7P7npg/7rbgAt2r8hrJvC0'
+		$controltier_server_local_ipbind = '33.33.33.37'
+		
+		include role_controltier_server
+}
+
+node controltier_client inherits sandbox {
+        
+		$controltier_client_passwd = '$1$6FlrakZW$7P7npg/7rbgAt2r8hrJvC0'
+		$controltier_client_local_ipbind = '33.33.33.38'
+		
+		include role_controltier_client
+}
