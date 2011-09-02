@@ -1,1 +1,1 @@
-import "rpmmaker/classes/*"
+import "deployinator/classes/*"

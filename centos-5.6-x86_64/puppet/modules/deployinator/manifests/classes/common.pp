@@ -40,24 +40,24 @@ class deployinator::common {
 	}
 	
 	# RPMS
-	package {'ruby':
-		require => [ File["rpmforge.repo"], File["epel.repo"] ],
-		ensure => 'latest';
-	'rubygems':
-		require => [ File["rpmforge.repo"], File["epel.repo"] ],
-		ensure => 'latest';
-	'rubygem-rake':
-		require => [ File["rpmforge.repo"], File["epel.repo"] ],
-		ensure => 'latest';
-	'ruby-devel':
-		require => [ File["rpmforge.repo"], File["epel.repo"] ],
-		ensure => 'latest';	
-	}
+	# package {'ruby':
+	# 	require => [ File["rpmforge.repo"], File["epel.repo"] ],
+	# 	ensure => 'latest';
+	# 'rubygems':
+	# 	require => [ File["rpmforge.repo"], File["epel.repo"] ],
+	# 	ensure => 'latest';
+	# 'rubygem-rake':
+	# 	require => [ File["rpmforge.repo"], File["epel.repo"] ],
+	# 	ensure => 'latest';
+	# 'ruby-devel':
+	# 	require => [ File["rpmforge.repo"], File["epel.repo"] ],
+	# 	ensure => 'latest';	
+	# }
 	
 	# Install Ruby Gems	
-	exec { "install-gems":
-			require => [ Package["ruby"], Package["rubygems"] ],
-			command => "gem install fpm";
-	}
+	# exec { "install-gems":
+	# 		require => [ Package["ruby"], Package["rubygems"] ],
+	# 		command => "gem install fpm";
+	# }
 	
 }
