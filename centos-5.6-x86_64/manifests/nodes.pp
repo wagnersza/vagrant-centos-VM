@@ -62,3 +62,11 @@ node controltier_client inherits sandbox {
 		
 		include role_controltier_client
 }
+
+node deployinator inherits sandbox {
+        
+		$deployinator_passwd = '$1$6FlrakZW$7P7npg/7rbgAt2r8hrJvC0'
+		$deployinator_local_ipbind = '33.33.33.39'
+		
+		include role_deployinator
+}

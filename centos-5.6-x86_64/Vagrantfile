@@ -75,4 +75,17 @@ Vagrant::Config.run do |config|
     end
   end
 
+  # DeployInator
+  config.vm.define :deployinator do |deployinator|
+    deployinator.vm.host_name = 'deployinator'
+    deployinator.vm.network "33.33.33.39"
+  
+    deployinator.vm.provision :puppet do |puppet|
+      puppet.module_path = ['puppet/modules','puppet-master/modules']
+      puppet.manifest_file = 'site.pp'
+      puppet.options = %w[--templatedir templates]
+    end
+  end
+
+
 end
